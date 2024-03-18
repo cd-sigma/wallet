@@ -33,7 +33,7 @@ async function getTokenBalances(address, chain) {
 
         let tokenBalances = response.data.data.items.map((item) => {
             const decimals = item.contract_decimals ? parseInt(item.contract_decimals) : 0;
-            const balance = parseInt(item.balance) / 10 ** (item.contract_decimals ? parseInt(item.contract_decimals) : 0);
+            const balance = parseInt(item.balance) / 10 ** decimals;
             return {
                 address: item.contract_address,
                 balance: balance,

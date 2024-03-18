@@ -20,7 +20,7 @@ function logBalances(tokenBalances) {
         console.log("---------------------------------TOKEN BALANCES--------------------------------------")
         console.log("S.NO      ADDRESS                                        SYMBOL              BALANCE              USD-VALUE");
         tokenBalances.forEach((tokenBalance, index) => {
-            console.log(`${index}         ${tokenBalance.address}     ${tokenBalance.symbol.length > 10 ? (tokenBalance.symbol.slice(0, 10) + "...") : (tokenBalance.symbol + " ".repeat(13 - tokenBalance.symbol.length))}       ${tokenBalance.balance.toString().length > 10 ? (tokenBalance.balance.toString().slice(0, 10) + "...") : (tokenBalance.balance.toString() + " ".repeat(13 - tokenBalance.balance.toString().length)) }        ${tokenBalance.usdValue}`)
+            console.log(`${index}         ${tokenBalance.address}     ${tokenBalance.symbol.length > 10 ? (tokenBalance.symbol.slice(0, 10) + "...") : (tokenBalance.symbol + " ".repeat(13 - tokenBalance.symbol.length))}       ${tokenBalance.balance}                    ${tokenBalance.usdValue}`)
         })
     } catch (error) {
         throw error;
