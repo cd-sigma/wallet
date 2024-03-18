@@ -5,17 +5,35 @@ const web3Lib = require("./web3.lib");
 const globalLib = require("./global.lib");
 
 const erc20Abi = require("../abi/erc20.abi.json");
+const chainEnum = require("../enums/chain.enum");
 const globalKeysEnum = require("../enums/global.keys.enum");
 
-function connect(apiKey) {
+function connect(chain) {
     try {
+        if (_.isEmpty(chain)) {
+            throw new Error(`Missing args! chain: ${chain}`);
+        }
+
+        const apiKey = process.env[`${chain}_ALCHEMY_API_KEY`]
         if (_.isEmpty(apiKey)) {
-            throw new Error(`Missing args! apiKey: ${apiKey}`);
+            throw new Error(`No alchemy api key found in the env file. Please add ${chain}_ALCHEMY_API_KEY in .env`)
+        }
+
+        let network = null;
+        switch (chain) {
+            case chainEnum.ETH_MAINNET:
+                network = Network.ETH_MAINNET;
+                break;
+            case chainEnum.ETH_SEPOLIA:
+                network = Network.ETH_SEPOLIA;
+                break;
+            default:
+                throw new Error(`${chain} not integrated on alchemy`)
         }
 
         globalLib.setGlobalKey(globalKeysEnum.ALCHEMY, new Alchemy({
             apiKey: apiKey,
-            network: Network.ETH_SEPOLIA,
+            network: network,
         }));
     } catch (error) {
         throw error;

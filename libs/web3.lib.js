@@ -44,7 +44,7 @@ function connectWithWallet(chain, privateKey) {
             throw new Error(`Missing args! chain: ${chain} privateKey: ${privateKey}`);
         }
 
-        let rpcUrl = process.env[`QUICKNODE_${chain}_NODE_URL`];
+        let rpcUrl = process.env[`${chain}_NODE_URL`];
         if (_.isEmpty(rpcUrl)) {
             throw new Error(`Node URL not found in .env for chain ${chain}`);
         }

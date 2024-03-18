@@ -13,7 +13,7 @@ function connect(chain) {
             throw new Error(`Missing args! chain : ${chain}`);
         }
 
-        const nodeUrl = process.env[`QUICKNODE_${chain}_NODE_URL`];
+        const nodeUrl = process.env[`${chain}_QUICKNODE_API_KEY`];
         if (_.isEmpty(nodeUrl)) {
             throw new Error(`Quicknode api key not found in .env for nodeUrl : ${nodeUrl}`);
         }

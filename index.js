@@ -7,6 +7,7 @@ const erc20Abi = require("./abi/erc20.abi.json");
 const multiTokenTransferAbi = require("./abi/multi.token.transfer.abi.json");
 
 const web3Lib = require("./libs/web3.lib");
+const alchemyLib = require("./libs/alchemy.lib");
 const quicknodeLib = require("./libs/quicknode.lib");
 
 const chainEnum = require("./enums/chain.enum");
@@ -82,9 +83,19 @@ async function sellTokens(chain, tokens) {
         const address = privateKeyToAddress(privateKey).toLowerCase();
 
         web3Lib.connectWithWallet(chain, privateKey);
-        quicknodeLib.connect(chain);
 
-        const tokenBalances = await quicknodeLib.getTokenBalances(address);
+        let tokenBalances = null;
+        if (chain === chainEnum.BSC) {
+            quicknodeLib.connect(chain);
+            tokenBalances = await quicknodeLib.getTokenBalances(address);
+        } else {
+            alchemyLib.connect(chain);
+            tokenBalances = await alchemyLib.getTokenBalances(address);
+        }
+
+        if (_.isEmpty(tokenBalances)) {
+            throw new Error(`No tokens Found in the wallet on chain: ${chain}`);
+        }
         logBalances(tokenBalances);
 
         const action = readlineSync.question("Enter what action to perform! \t 1. Transfer \t 2. Sell : ");
