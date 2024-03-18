@@ -1,10 +1,6 @@
 const {Core} = require("@quicknode/sdk");
 const _ = require("lodash");
-
-const web3Lib = require("./web3.lib");
 const globalLib = require("./global.lib");
-
-const erc20Abi = require("../abi/erc20.abi.json");
 const globalKeysEnum = require("../enums/global.keys.enum");
 
 function connect(chain) {
@@ -15,7 +11,7 @@ function connect(chain) {
 
         const nodeUrl = process.env[`${chain}_QUICKNODE_API_KEY`];
         if (_.isEmpty(nodeUrl)) {
-            throw new Error(`Quicknode api key not found in .env for nodeUrl : ${nodeUrl}`);
+            throw new Error(`Quicknode api key not found in .env for chain : ${chain}`);
         }
 
         globalLib.setGlobalKey(globalKeysEnum.QUICKNODE, new Core({
@@ -64,7 +60,8 @@ async function getTokenBalances(address) {
                 balance: parseInt(token.totalBalance) / 10 ** (token.decimals ? parseInt(token.decimals) : 0),
                 decimals: (token.decimals ? parseInt(token.decimals) : 0),
                 rawBalance: BigInt(token.totalBalance),
-                symbol: token.symbol
+                symbol: token.symbol,
+                usdValue: "N/A"
             }
         });
 

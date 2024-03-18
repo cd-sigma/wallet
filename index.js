@@ -7,6 +7,7 @@ const erc20Abi = require("./abi/erc20.abi.json");
 const multiTokenTransferAbi = require("./abi/multi.token.transfer.abi.json");
 
 const web3Lib = require("./libs/web3.lib");
+const covalentLib = require("./libs/covalent.lib");
 const alchemyLib = require("./libs/alchemy.lib");
 const quicknodeLib = require("./libs/quicknode.lib");
 
@@ -17,9 +18,9 @@ const multiContractAddressEnum = require("./enums/multi.contract.address.enum");
 function logBalances(tokenBalances) {
     try {
         console.log("---------------------------------TOKEN BALANCES--------------------------------------")
-        console.log("S.NO      ADDRESS                                        SYMBOL              BALANCE");
+        console.log("S.NO      ADDRESS                                        SYMBOL              BALANCE              USD-VALUE");
         tokenBalances.forEach((tokenBalance, index) => {
-            console.log(`${index}         ${tokenBalance.address}     ${tokenBalance.symbol.length > 10 ? (tokenBalance.symbol.slice(0, 10) + "...") : (tokenBalance.symbol + " ".repeat(13 - tokenBalance.symbol.length))}       ${tokenBalance.balance}`)
+            console.log(`${index}         ${tokenBalance.address}     ${tokenBalance.symbol.length > 10 ? (tokenBalance.symbol.slice(0, 10) + "...") : (tokenBalance.symbol + " ".repeat(13 - tokenBalance.symbol.length))}       ${tokenBalance.balance.toString().length > 10 ? (tokenBalance.balance.toString().slice(0, 10) + "...") : (tokenBalance.balance.toString() + " ".repeat(13 - tokenBalance.balance.toString().length)) }        ${tokenBalance.usdValue}`)
         })
     } catch (error) {
         throw error;
@@ -84,14 +85,7 @@ async function sellTokens(chain, tokens) {
 
         web3Lib.connectWithWallet(chain, privateKey);
 
-        let tokenBalances = null;
-        if (chain === chainEnum.BSC) {
-            quicknodeLib.connect(chain);
-            tokenBalances = await quicknodeLib.getTokenBalances(address);
-        } else {
-            alchemyLib.connect(chain);
-            tokenBalances = await alchemyLib.getTokenBalances(address);
-        }
+        let tokenBalances = await covalentLib.getTokenBalances(address,chain);
 
         if (_.isEmpty(tokenBalances)) {
             throw new Error(`No tokens Found in the wallet on chain: ${chain}`);

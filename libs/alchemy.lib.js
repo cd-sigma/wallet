@@ -92,6 +92,7 @@ async function getTokenBalances(address) {
                 decimals: tokenDecimals[index],
                 rawBalance: BigInt(tokenBalance.balance),
                 balance: tokenBalance.balance / 10 ** tokenDecimals[index],
+                usdValue:"N/A"
             }
         })
         tokenBalances = tokenBalances.filter(token => token.balance !== 0)
