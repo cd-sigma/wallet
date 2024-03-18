@@ -20,7 +20,7 @@ function logBalances(tokenBalances) {
         console.log("---------------------------------TOKEN BALANCES--------------------------------------")
         console.log("S.NO      ADDRESS                                        SYMBOL              BALANCE              USD-VALUE");
         tokenBalances.forEach((tokenBalance, index) => {
-            console.log(`${index}         ${tokenBalance.address}     ${tokenBalance.symbol.length > 10 ? (tokenBalance.symbol.slice(0, 10) + "...") : (tokenBalance.symbol + " ".repeat(13 - tokenBalance.symbol.length))}       ${tokenBalance.balance}                    ${tokenBalance.usdValue}`)
+            console.log(`${index}         ${tokenBalance.address}     ${tokenBalance.symbol ? (tokenBalance.symbol.length > 10 ? (tokenBalance.symbol.slice(0, 10) + "...") : (tokenBalance.symbol + " ".repeat(13 - tokenBalance.symbol.length))) : ("N/A" + " ".repeat(10))}       ${tokenBalance.balance.toString().length > 10 ? (tokenBalance.balance.toString().slice(0, 10) + "...") : (tokenBalance.balance.toString() + " ".repeat(13 - tokenBalance.balance.toString().length))}        ${tokenBalance.usdValue}`)
         })
     } catch (error) {
         throw error;
@@ -85,7 +85,7 @@ async function sellTokens(chain, tokens) {
 
         web3Lib.connectWithWallet(chain, privateKey);
 
-        let tokenBalances = await covalentLib.getTokenBalances(address,chain);
+        let tokenBalances = await covalentLib.getTokenBalances(address, chain);
 
         if (_.isEmpty(tokenBalances)) {
             throw new Error(`No tokens Found in the wallet on chain: ${chain}`);
